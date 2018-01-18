@@ -1,5 +1,4 @@
 .background-color {
-  /* Location of the image */
   background-image: url(images/geometric-background.jpg);
   background-position: center center;
   background-repeat: no-repeat;
@@ -31,7 +30,7 @@
 }
 
 .button-index {
-  background-color: black; /* Green */
+  background-color: black;
   border: none;
   color: white;
   padding: 20px 30px;
