@@ -105,23 +105,6 @@ function draw(){
     } 
 }
 
-function keyPressed() {
-  if (key == 'b' || key == 'B') {
-    stroke(0, 0, 255);
-  } else if (key == 'c' || key == 'C'){
-    stroke(0, 255, 255);
-  } else if (key == 'm' || key == 'M'){
-    stroke(255, 0, 255);
-  } else if (key == 'w' || key == 'W'){
-    stroke(0);
-  } else if (keyCode == RIGHT_ARROW){
-      weight++;
-      strokeWeight(weight);
-    } else if (keyCode == LEFT_ARROW){
-      weight/=2;
-      strokeWeight(weight);
-    }
-}
 
 function mouseClicked() {
   //clear button
