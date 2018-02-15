@@ -67,7 +67,7 @@ for (let i = 0; i < 9; i++) {
  spots = [];
   for (let i = 0; i < 3; i++){  // Make a for() loop to create the desired number of Spots
     // Add an index [i] to create multiple Spots
-    spots[i] = new Spot(floor(random(0,3)) * movement +  WIDTH/2 - movement, 
+    spots[i] = new Spot(WIDTH, 
       0, 0.5 * i + 1);
    }
 
