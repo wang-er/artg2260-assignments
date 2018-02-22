@@ -1,5 +1,16 @@
-var bunnyimg;
+var bunnyLeft;
+var bunnyRight;
+var bunnyFront;
+var bunnyBack;
+
 var carrotimg;
+var floorimg;
+var tomatoimg;
+var grassimg;
+
+var bunnyEnd;
+
+var font;
 
 
 let spots = [];
@@ -14,22 +25,42 @@ let movement = platformSize + platformSize/6;
 
 let gameState = 0;
 let score = 0;
+let hiscore = 0;
 
 
 var bunnyvar;
 var carrotvar;
 var spotvar;
+
+function preload(){
+
+bunnyLeft = loadImage("assets/bunnyLeft.png");
+bunnyRight = loadImage("assets/bunnyRight.png");
+bunnyFront = loadImage("assets/bunnyFront.png");
+bunnyBack = loadImage("assets/bunnyBack.png");
+
+carrotimg = loadImage("assets/carrot.png");
+floorimg = loadImage("assets/floor.png");
+tomatoimg = loadImage("assets/tomato.png");
+grassimg = loadImage("assets/grass.png");
+
+bunnyEnd = loadImage("assets/bunnyEnd.png");
+
+font = loadFont('assets/Adelle_Reg.otf');
+
+}
+
+
+
+
+
+
 function setup(){
   framerate = 20;
 
 createCanvas(WIDTH, HEIGHT);
 
 var randomNumber = floor(random(0,3));
-
-//use later
-bunnyimg = loadImage("images/bunny.png");
-carrotimg = loadImage("images/carrot.png");
-
 }
 
 function draw(){
@@ -43,8 +74,41 @@ function draw(){
 }
 
 function startScreen(){
-  background(255);
-  text("Click to Begin", 10, 30);
+  background(grassimg);
+  textFont(font);
+  textSize(50);
+  fill(255, 170, 0, 200);
+  textAlign(CENTER);
+  text("Carrot Collector", WIDTH/2, HEIGHT/4);
+
+
+  fill(0, 100);
+rect(0,185, WIDTH, 150);
+
+  fill(255, 200, 0, 200);
+  textSize(20);
+  text("High Score: " + hiscore, WIDTH/2, HEIGHT/4 + 30);
+  textAlign(LEFT);
+  textSize(20);
+  text("Instructions: You're a bunny", WIDTH/8, HEIGHT/2 - 20);
+  image(bunnyFront, 4*WIDTH/6+5, HEIGHT/2 - 45, 40, 40);
+
+  text("trying to collect carrots!", WIDTH/8, HEIGHT/2 + 20);
+  image(carrotimg, 3*WIDTH/5+5, HEIGHT/2, 30, 30);
+
+  text("Try to avoid the tomatoes, they hurt!", WIDTH/8, HEIGHT/2 + 60);
+  image(tomatoimg, 4*WIDTH/5+15, HEIGHT/2 + 40, 30, 30);
+
+  textAlign(CENTER);
+  fill(255, 170, 0, 200);
+  text("Use arrow keys to move around.", WIDTH/2, 3*HEIGHT/4);
+  textSize(25);
+  text("Press Space to Start!", WIDTH/2, 3*HEIGHT/4 + 30);
+
+
+
+
+
 
 
 for (let i = 0; i < 9; i++) {
@@ -68,34 +132,40 @@ for (let i = 0; i < 9; i++) {
   for (let i = 0; i < 3; i++){  // Make a for() loop to create the desired number of Spots
     // Add an index [i] to create multiple Spots
     spots[i] = new Spot(WIDTH, 
-      0, 0.5 * i + 1);
+      0, 0.1 * i + 1, 0);
    }
 
     //set up a bunny! 
-    bunnyvar = new Bunny(WIDTH/2, HEIGHT/2, "meep");
+    bunnyvar = new Bunny(WIDTH/2, HEIGHT/2, bunnyFront);
 
     carrotvar = new Carrot(floor(random(0,3)) * movement +  WIDTH/2 - movement,
       floor(random(0,3)) * movement +  WIDTH/2 - movement);
 
     score = 0;
 
-    spotvar = new Spot(floor(random(0,3)) * movement +  WIDTH/2 - movement, 
-      0, 1);
+    // spotvar = new Spot(floor(random(0,3)) * movement +  WIDTH/2 - movement, 
+    //   0, 1);
 
 
 }
 
 function update(){
+  background(grassimg);
   noStroke();
-  background(200, 200, 255);
+
 
 
 //set up for background
 for (let i = 0; i < platforms.length; i++){
   platforms[i].display();
 }
-  text("Playing", 10, 30);
-  text("Score: " + score, 10, 90); 
+  textFont(font);
+  textSize(40);
+  fill(255, 200, 0, 200);
+  textAlign(CENTER);
+  text("Score: " + score, WIDTH/2, 80); 
+  textSize(20);
+  text("High Score: " + hiscore, WIDTH/2, 110);
 
 
 
@@ -106,33 +176,56 @@ for (let i = 0; i < platforms.length; i++){
   carrotvar.hit(bunnyvar);
 
       for (let i = 0; i < spots.length; i++){  // Make a for() loop to loop through each Spot 
-    spots[i].move(0);            // Move each object
+    spots[i].move();            // Move each object
     spots[i].display();         // Display each object
     spots[i].check(bunnyvar);           // Check for mouse overlap
   }
 
+if(spots.length < 3 + floor(score/10)) {
+  spots.push(new Spot(WIDTH, 
+      0, 0.1 * spots.length + 1, 0));
+}
 
- // spotvar.display();
-  //spotvar.move(0);
-  //spotvar.check(bunnyvar);
+
 }
 
 function gameOver(){
-  background(255);
-  text("Game Over", 10, 30);
-  text("Score: " + score, 10, 90);
+  background(grassimg);
+  textFont(font);
+  textSize(50);
+  fill(255, 200, 0, 200);
+  textAlign(CENTER);
+  text("Game Over!", WIDTH/2, HEIGHT/4);
+  textSize(20);
+  text("Final Score: " + score, WIDTH/2, HEIGHT/4 + 30);
+      textSize(25);
+    text("Press Space to Continue", WIDTH/2, 3*HEIGHT/4);
+imageMode(CENTER);
+  image(bunnyEnd, WIDTH/2, HEIGHT/2, 150, 150);
+
+
+ if(score > hiscore) {
+  //   textSize(15);
+  //   text("New High Score!", WIDTH/2, HEIGHT/2 + 55);
+hiscore = score;
+ }
+
 }
 
-function mouseClicked(){
- if (gameState == 0){ //start to playing
-   gameState = 1;
- } else if (gameState == 2){ //game over to restart to start again
-   gameState = 0;
- }
-}
+// function mouseClicked(){
+//  if (gameState == 0){ //start to playing
+//    gameState = 1;
+//  } else if (gameState == 2){ //game over to restart to start again
+//    gameState = 0;
+//  }
+// }
 
 function keyPressed() {
-  if (keyCode === LEFT_ARROW) {
+   if (gameState == 0 && key == ' '){ //start to playing
+   gameState = 1;
+ } else if (gameState == 2 && key == ' '){ //game over to restart to start again
+   gameState = 0;
+ } else if (keyCode === LEFT_ARROW) {
     bunnyvar.moveTo(LEFT_ARROW);
   } else if (keyCode === RIGHT_ARROW) {
     bunnyvar.moveTo(RIGHT_ARROW);
@@ -146,30 +239,33 @@ function keyPressed() {
 }
 
 class Spot {
-  constructor(_x, _y, _speed) {
+  constructor(_x, _y, _speed, _direction) {
     this.x = _x;
     this.y = _y;
     this.speed = _speed;
+    this.direction = _direction;
+
   }
 
 
-  move(direction) {
-    if(direction === 0) {
+  move() {
+    console.log(this.direction);
+    if(this.direction === 0) {
       this.x += this.speed;
       if (this.x > (WIDTH)){
         this.place()
     }
-  }  else if(direction === 1) {
+  }  else if(this.direction === 1) {
       this.x -= this.speed;
       if (this.x < 0) {
         this.place()
       }
-    } else if(direction === 2) {
+    } else if(this.direction === 2) {
       this.y += this.speed;
       if (this.y > (HEIGHT)) {
         this.place()
       }
-    }else if(direction === 3) {
+    }else if(this.direction === 3) {
       this.y -= this.speed;
       if (this.y < 0) {
         this.place()
@@ -181,40 +277,43 @@ class Spot {
 
 
 
-
   place() { 
-    if(floor(0,4) === 0) {
-      new Spot(
-        this.x = 0,
-        this.y = (floor(random(0,3)) * (platformSize + 10) +  HEIGHT/2  - movement),
-        this.speed);
-    } else if(floor(0,4) === 1) {
-      new Spot(
-        this.x = WIDTH,
-        this.y = (floor(random(0,3)) * (platformSize + 10) +  HEIGHT/2  - movement),
-        this.speed);
-    } else if(floor(0,4) === 2) {
-      new Spot(
-        this.x = (floor(random(0,3)) * (platformSize + 10) +  WIDTH/2  - movement),
-        this.y = 0,
-        this.speed);
-    } else if(floor(0,4) === 3) {
-      new Spot(
-        this.x = (floor(random(0,3)) * (platformSize + 10) +  WIDTH/2  - movement),
-        this.y = HEIGHT,
-        this.speed);
+    var randomDirection = floor(random(0,4));
+    console.log(randomDirection);
+    if(randomDirection === 0) {
+        this.x = 0;
+        this.y = (floor(random(0,3)) * (platformSize + 10) +  HEIGHT/2  - movement);
+        //this.speed,
+        this.direction = 0;
+    } else if(randomDirection === 1) {
+        this.x = WIDTH;
+        this.y = (floor(random(0,3)) * (platformSize + 10) +  HEIGHT/2  - movement);
+        //this.speed,
+        this.direction = 1;
+    } else if(randomDirection === 2) {
+        this.x = (floor(random(0,3)) * (platformSize + 10) +  WIDTH/2  - movement);
+        this.y = 0;
+        //this.speed,
+        this.direction = 2;
+    } else if(randomDirection === 3) {
+        this.x = (floor(random(0,3)) * (platformSize + 10) +  WIDTH/2  - movement);
+        this.y = HEIGHT;
+        //this.speed,
+        this.direction = 3;
     }
   }
 
 
   display() {
-    fill(255, 0 ,0);
-     ellipse(this.x, this.y, 25, 25);
+    // fill(255, 0 ,0);
+    //  ellipse(this.x, this.y, 25, 25);
+    imageMode(CENTER);
+    image(tomatoimg, this.x, this.y, 30, 30);
   }
 
   check(Bunny) {
-    if (abs(this.x - Bunny.x) < 5
-      && abs(this.y  - Bunny.y) < 5){
+    if (abs(this.x - Bunny.x) < 20
+      && abs(this.y  - Bunny.y) < 20){
       gameState = 2;
     }
   }
@@ -228,8 +327,9 @@ class platform {
   }
 
   display() {
-    fill(25);
-    rect(this.x, this.y, this.length, this.length);
+    // fill(25);
+    // rect(this.x, this.y, this.length, this.length);
+    image(floorimg, this.x, this.y, this.length, this.length);
   }
 }
 
@@ -243,21 +343,29 @@ class platform {
   moveTo(direction) {
     if(direction === LEFT_ARROW && this.x > WIDTH/2 - WIDTH/8) {
       this.x = this.x - movement;
+      this.img = bunnyLeft;
+
     }
     else if(direction === RIGHT_ARROW && this.x < WIDTH/2 + WIDTH/8) {
       this.x = this.x + movement;
+      this.img = bunnyRight;
+
     }
     else if(direction === UP_ARROW && this.y > WIDTH/2 - WIDTH/8) {
       this.y = this.y - movement;
+      this.img = bunnyBack;
     }
     else if(direction ===DOWN_ARROW && this.y < WIDTH/2 + WIDTH/8) {
       this.y = this.y + movement;
+      this.img = bunnyFront;
     }
   }
 
   display() {
-    fill(255, 200, 100);
-    ellipse(this.x, this.y, 30, 30);
+    // fill(255, 200, 100);
+    // ellipse(this.x, this.y, 30, 30);
+    imageMode(CENTER);
+    image(this.img, this.x, this.y, 40, 40);
   }
 }
 
@@ -282,8 +390,10 @@ class Carrot {
   }
 
   display() {
-    fill(255, 255, 100);
-    ellipse(this.x, this.y, 20, 20);
+    imageMode(CENTER);
+    // fill(255, 255, 100);
+    // ellipse(this.x, this.y, 20, 20);
+    image(carrotimg, this.x, this.y, 30, 30);
   }
 
 }
