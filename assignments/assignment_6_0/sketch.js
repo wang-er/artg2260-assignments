@@ -118,8 +118,8 @@ class Spot{
   constructor(_x, _y, _color){
     this.x = _x;
     this.y = _y;
-    this.xVel = random(-0.5, 0.5);
-    this.yVel = random(-0.5, 0.5);
+    this.xVel = random(-2, 2);
+    this.yVel = random(-2, 2);
     this.yAcc = 0.09;
     this.friction = 0.95;
     this.diameter = 30;
